@@ -1,0 +1,229 @@
+.home {
+  display: flex;
+  height: 100%;
+
+  .form-builder-section,
+  .form-render-section {
+    padding: 20px;
+    border: 1px solid gray;
+  }
+
+  .form-builder-section {
+    width: 65%;
+    display: flex;
+    padding: 0 20px;
+    height: 100%;
+
+    .available-fields,
+    .available-actions {
+      padding: 20px 0;
+    }
+
+    .available-fields {
+      .drag-and-drop-list {
+        height: 248px;
+      }
+    }
+
+    .available-actions {
+      .drag-and-drop-list {
+        height: 125px;
+      }
+    }
+
+    .available-controls {
+      width: 210px;
+    }
+
+    .selected-controls {
+      width: calc(100% - 210px);
+      margin-inline-end: 0;
+
+      .selected-fields {
+        padding: 20px 0;
+        height: 70%;
+
+        .fields {
+          height: calc(100% - 34px);
+          overflow-y: auto;
+
+          .drag-and-drop-box {
+            flex-direction: column;
+          }
+
+          .field-actions {
+            display: flex;
+            width: 100%;
+            height: 38px;
+
+            .field-title {
+              width: 80%;
+              line-height: 35px;
+              text-transform: capitalize;
+              font-size: 16px;
+              font-weight: 500;
+            }
+
+            .field-btns {
+              width: 20%;
+              display: flex;
+              justify-content: flex-end;
+            }
+
+            .edit-field-btn {
+              height: 30px;
+              width: 30px;
+              padding: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              border: none;
+              outline: none;
+
+              background: none;
+              margin-inline-end: 10px;
+
+              i {
+                font-size: 18px;
+                margin-inline-end: 3px;
+              }
+
+              &:focus {
+                box-shadow: none !important;
+              }
+            }
+
+            .option-row {
+              position: relative;
+            }
+          }
+        }
+      }
+
+      .selected-actions {
+        padding: 20px 0;
+        height: 33%;
+
+        .actions {
+          height: calc(100% - 34px);
+          overflow-y: auto;
+        }
+
+        .drag-and-drop-box {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+    }
+
+    .remove-item-btn {
+      height: 30px;
+      width: 30px;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: none;
+      outline: none;
+
+      i {
+        font-size: 18px;
+        margin-inline-end: 3px;
+      }
+    }
+  }
+
+  .form-render-section {
+    width: 35%;
+
+    .created-form {
+      border: 1px solid gray;
+      padding: 10px;
+      height: calc(100% - 50px);
+      overflow: auto;
+
+      .field {
+        margin-bottom: 10px;
+      }
+
+      .form-label,
+      .form-group {
+        margin-bottom: 5px;
+      }
+
+      .invalid-control {
+        border: 1px solid red;
+      }
+
+      .validation-error-message {
+        color: red;
+        font-size: 12px;
+      }
+
+      .invalid-control-label {
+        color: red;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+
+        .cancel-btn {
+          margin-inline-end: 10px;
+        }
+      }
+    }
+  }
+
+  .margin-bottom {
+    margin-bottom: 10px;
+  }
+
+  .add-option {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .option-label,
+  .option-value {
+    width: 35%;
+  }
+
+  .option-value {
+    margin-inline-start: 10px;
+  }
+
+  .option-selected {
+    width: 15%;
+    margin-inline-start: 25px;
+    margin-top: 7px;
+  }
+
+  .remove-option-container {
+    width: 8%;
+    text-align: end;
+  }
+
+  .required-checkbox {
+    padding-top: 6px;
+  }
+
+  .min-length-input,
+  .max-length-input {
+    padding-inline-start: 6px;
+    padding-top: 6px;
+  }
+
+  option,
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  option:disabled {
+    cursor: not-allowed;
+  }
+}

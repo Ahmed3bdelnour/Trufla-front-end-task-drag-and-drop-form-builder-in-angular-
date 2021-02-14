@@ -1,0 +1,716 @@
+<div class="home">
+  <div class="form-builder-section">
+    <div class="drag-and-drop-container available-controls">
+      <div class="available-fields">
+        <h5>Available Fields</h5>
+
+        <div
+          cdkDropList
+          #availableFieldsList="cdkDropList"
+          [cdkDropListData]="availableFields"
+          [cdkDropListConnectedTo]="[selectedFieldsList]"
+          cdkDropListSortingDisabled
+          [cdkDropListEnterPredicate]="noReturnPredicate"
+          class="drag-and-drop-list"
+        >
+          <div
+            class="drag-and-drop-box"
+            *ngFor="let field of availableFields"
+            [cdkDragData]="field"
+            cdkDrag
+          >
+            {{ field.type }}
+          </div>
+        </div>
+      </div>
+      <div class="available-actions">
+        <h5>Available Actions</h5>
+
+        <div
+          cdkDropList
+          #availableActionsList="cdkDropList"
+          [cdkDropListData]="availableActions"
+          [cdkDropListConnectedTo]="[selectedActionsList]"
+          cdkDropListSortingDisabled
+          [cdkDropListEnterPredicate]="noReturnPredicate"
+          class="drag-and-drop-list"
+        >
+          <div
+            class="drag-and-drop-box"
+            *ngFor="let action of availableActions"
+            [cdkDragData]="action"
+            cdkDrag
+          >
+            {{ action.type }}
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="btn btn-primary"
+        [disabled]="!selectedFields.length && !selectedActions.length"
+        (click)="renderForm()"
+      >
+        Render Form
+      </button>
+    </div>
+
+    <div class="drag-and-drop-container selected-controls">
+      <div class="selected-fields">
+        <h5>Selected Fields</h5>
+
+        <div
+          cdkDropList
+          #selectedFieldsList="cdkDropList"
+          [cdkDropListData]="selectedFields"
+          [cdkDropListConnectedTo]="[availableFieldsList]"
+          class="drag-and-drop-list fields"
+          (cdkDropListDropped)="dropOnSelectedFields($event)"
+        >
+          <div
+            class="drag-and-drop-box"
+            *ngFor="let selectedField of selectedFields; let fieldIndex = index"
+            [cdkDragData]="selectedField"
+            cdkDrag
+          >
+            <div class="field-actions">
+              <div class="field-title">
+                {{ selectedField.type + " Field" }}
+              </div>
+              <div class="field-btns">
+                <button
+                  class="btn btn-secondary edit-field-btn"
+                  (click)="toggleEditSelectedField(fieldIndex)"
+                >
+                  <i *ngIf="!selectedField.edit"> &#9999;</i>
+                  <i *ngIf="selectedField.edit"> &#9745; </i>
+                </button>
+
+                <button
+                  class="btn btn-danger remove-item-btn"
+                  (click)="removeSelectedField(fieldIndex)"
+                >
+                  <i>&#10007;</i>
+                </button>
+              </div>
+            </div>
+            <div class="form-row edit-field-row" *ngIf="selectedField.edit">
+              <div class="col-md-6 margin-bottom">
+                <div class="row">
+                  <label
+                    [for]="'label ' + fieldIndex"
+                    class="col-sm-2 col-form-label"
+                    >Label</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control"
+                      [id]="'label ' + fieldIndex"
+                      [(ngModel)]="selectedField.label"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 margin-bottom">
+                <div class="row">
+                  <label
+                    [for]="'name ' + fieldIndex"
+                    class="col-sm-2 col-form-label"
+                    >Name</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control"
+                      [id]="'name ' + fieldIndex"
+                      [(ngModel)]="selectedField.name"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                *ngIf="selectedField.placeholder !== undefined"
+                class="col-md-12 margin-bottom"
+              >
+                <div class="row">
+                  <label
+                    [for]="'placeholder ' + fieldIndex"
+                    class="col-sm-2 col-form-label"
+                    >Placeholder</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control"
+                      [id]="'placeholder ' + fieldIndex"
+                      [(ngModel)]="selectedField.placeholder"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                *ngIf="
+                  selectedField.value !== undefined &&
+                  selectedField.type !== 'radio'
+                "
+                class="col-md-12 margin-bottom"
+              >
+                <div class="row">
+                  <label
+                    [for]="'value ' + fieldIndex"
+                    class="col-sm-2 col-form-label"
+                    >Value</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control"
+                      [id]="'value ' + fieldIndex"
+                      [(ngModel)]="selectedField.value"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                *ngIf="
+                  selectedField.type === 'radio' ||
+                  selectedField.type === 'checkbox'
+                "
+                class="col-md-12 margin-bottom"
+              >
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [id]="'inline ' + fieldIndex"
+                    [(ngModel)]="selectedField.inline"
+                  />
+                  <label
+                    class="form-check-label"
+                    [for]="'inline ' + fieldIndex"
+                  >
+                    display inline?
+                  </label>
+                </div>
+              </div>
+
+              <div
+                *ngIf="selectedField.type === 'select'"
+                class="col-md-12 margin-bottom"
+              >
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [id]="'multiple ' + fieldIndex"
+                    [(ngModel)]="selectedField.multiple"
+                    (change)="
+                      enableOptions(selectedField);
+                      unselectOptions(selectedField)
+                    "
+                  />
+                  <label
+                    class="form-check-label"
+                    [for]="'multiple ' + fieldIndex"
+                  >
+                    select multiple options?
+                  </label>
+                </div>
+              </div>
+
+              <div
+                *ngIf="
+                  selectedField.type === 'select' ||
+                  selectedField.type === 'radio' ||
+                  selectedField.type === 'checkbox'
+                "
+                class="col-md-12 margin-bottom"
+              >
+                <h6>Options</h6>
+
+                <div class="col-sm-12">
+                  <div
+                    class="row option-row margin-bottom"
+                    *ngFor="
+                      let option of selectedField.options;
+                      let optionIndex = index
+                    "
+                  >
+                    <div class="option-label">
+                      <div class="row">
+                        <label
+                          [for]="'label ' + optionIndex + fieldIndex"
+                          class="col-sm-2 col-form-label"
+                          >Label</label
+                        >
+                        <div class="col-sm-10">
+                          <input
+                            type="text"
+                            class="form-control"
+                            [id]="'label ' + optionIndex + fieldIndex"
+                            [(ngModel)]="option.label"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="option-value">
+                      <div class="row">
+                        <label
+                          [for]="'value ' + optionIndex + fieldIndex"
+                          class="col-sm-2 col-form-label"
+                          >Value</label
+                        >
+                        <div class="col-sm-10">
+                          <input
+                            type="text"
+                            class="form-control"
+                            [id]="'value ' + optionIndex + fieldIndex"
+                            [(ngModel)]="option.value"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="option-selected"
+                      *ngIf="selectedField.type !== 'radio'"
+                    >
+                      <div class="row">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            [id]="'radio-selected ' + optionIndex + fieldIndex"
+                            [(ngModel)]="option.selected"
+                            [disabled]="option.disabled"
+                            (change)="
+                              disableOrDisableOtherOptionsForSingleSelect(
+                                $event,
+                                selectedField,
+                                optionIndex
+                              )
+                            "
+                          />
+                          <label
+                            class="form-check-label"
+                            [for]="'radio-selected ' + optionIndex + fieldIndex"
+                          >
+                            Is selected?
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="remove-option-container">
+                      <button
+                        *ngIf="showRemoveIcon(selectedField, optionIndex)"
+                        class="btn btn-danger"
+                        (click)="removeOption(fieldIndex, optionIndex)"
+                      >
+                        <i>&#10007;</i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="add-option">
+                    <button
+                      class="btn btn-secondary"
+                      (click)="addOption(fieldIndex)"
+                    >
+                      Add Option
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                *ngIf="
+                  selectedField.value !== undefined &&
+                  selectedField.type === 'radio'
+                "
+                class="col-md-12 margin-bottom"
+              >
+                <div class="row">
+                  <label
+                    [for]="'value ' + fieldIndex"
+                    class="col-sm-1 col-form-label"
+                    >Value</label
+                  >
+                  <div class="col-sm-4">
+                    <input
+                      *ngIf="selectedField.type !== 'radio'"
+                      type="text"
+                      class="form-control"
+                      [id]="'value ' + fieldIndex"
+                      [(ngModel)]="selectedField.value"
+                    />
+
+                    <select
+                      *ngIf="selectedField.type === 'radio'"
+                      class="form-control"
+                      [id]="'value ' + fieldIndex"
+                      [(ngModel)]="selectedField.value"
+                    >
+                      <option [value]="null" disabled>Select value</option>
+                      <option
+                        *ngFor="let option of selectedField.options"
+                        [value]="option.value"
+                      >
+                        {{ option.label }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12 margin-bottom">
+                <h6>Validations</h6>
+
+                <div class="col-sm-12">
+                  <div
+                    class="row"
+                    *ngFor="
+                      let validation of selectedField.validations;
+                      let validationIndex = index
+                    "
+                  >
+                    <div class="col-sm-12 margin-bottom">
+                      <div class="row">
+                        <div
+                          class="form-check col-sm-2 required-checkbox"
+                          *ngIf="validation.type === 'required'"
+                        >
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            [id]="'required ' + validationIndex + fieldIndex"
+                            [(ngModel)]="validation.selected"
+                          />
+                          <label
+                            class="form-check-label"
+                            [for]="'required ' + validationIndex + fieldIndex"
+                          >
+                            Required
+                          </label>
+                        </div>
+
+                        <div
+                          class="col-sm-4"
+                          *ngIf="validation.type === 'minlength'"
+                        >
+                          <div class="row min-length-input">
+                            <div class="col-sm-6">
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                [id]="
+                                  'minlength ' + validationIndex + fieldIndex
+                                "
+                                [(ngModel)]="validation.selected"
+                              />
+                              <label
+                                class="form-check-label"
+                                [for]="
+                                  'minlength ' + validationIndex + fieldIndex
+                                "
+                              >
+                                Min Length
+                              </label>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="minlength"
+                                [(ngModel)]="validation.value"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          class="col-sm-4"
+                          *ngIf="validation.type === 'maxlength'"
+                        >
+                          <div class="row max-length-input">
+                            <div class="col-sm-6">
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                [id]="
+                                  'maxlength ' + validationIndex + fieldIndex
+                                "
+                                [(ngModel)]="validation.selected"
+                              />
+                              <label
+                                class="form-check-label"
+                                [for]="
+                                  'maxlength ' + validationIndex + fieldIndex
+                                "
+                              >
+                                Max Length
+                              </label>
+                            </div>
+                            <div class="col-sm-6">
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="maxlength"
+                                [(ngModel)]="validation.value"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          [ngClass]="{
+                            'col-sm-8': selectedField.type === 'text',
+                            'col-sm-10': selectedField.type !== 'text'
+                          }"
+                        >
+                          <div class="row">
+                            <label
+                              [for]="
+                                'error-message ' + validationIndex + fieldIndex
+                              "
+                              class="col-sm-2 col-form-label"
+                              >Message</label
+                            >
+                            <div class="col-sm-10">
+                              <input
+                                type="text"
+                                class="form-control"
+                                [id]="
+                                  'error-message ' +
+                                  validationIndex +
+                                  fieldIndex
+                                "
+                                [(ngModel)]="validation.message"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="selected-actions">
+        <h5>Selected Actions</h5>
+
+        <div
+          cdkDropList
+          #selectedActionsList="cdkDropList"
+          [cdkDropListData]="selectedActions"
+          [cdkDropListConnectedTo]="[availableActionsList]"
+          [cdkDropListEnterPredicate]="selectedActionsPredicate"
+          class="drag-and-drop-list actions"
+          (cdkDropListDropped)="dropOnSelectedActions($event)"
+        >
+          <div
+            class="drag-and-drop-box"
+            *ngFor="
+              let selectedAction of selectedActions;
+              let actionIndex = index
+            "
+            [cdkDragData]="selectedAction"
+            cdkDrag
+          >
+            <div class="row">
+              <label for="action-text" class="col-sm-2 col-form-label"
+                >Text</label
+              >
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="action-text"
+                  [(ngModel)]="selectedAction.text"
+                />
+              </div>
+            </div>
+
+            <button
+              class="btn btn-danger remove-item-btn"
+              (click)="removeSelectedAction(actionIndex)"
+            >
+              <i>&#10007;</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-render-section">
+    <h5>Created Form will be rendered below</h5>
+    <form class="created-form" [formGroup]="createdForm" *ngIf="showForm">
+      <div class="fields">
+        <div class="field" *ngFor="let field of formObject.fields">
+          <label class="form-label" *ngIf="field.label" [for]="field.name">
+            <span>
+              {{ field.label }}
+            </span>
+            <span
+              class="invalid-control-label"
+              *ngIf="createdForm.get(field.name).errors"
+              >*</span
+            >
+          </label>
+
+          <div class="form-group" *ngIf="field.type === 'text'">
+            <input
+              type="text"
+              class="form-control"
+              [class.invalid-control]="createdForm.get(field.name).errors"
+              [id]="field.name"
+              [placeholder]="field.placeholder"
+              [formControlName]="field.name"
+            />
+          </div>
+
+          <div class="form-group" *ngIf="field.type === 'radio'">
+            <div
+              [ngStyle]="{
+                display: field.inline ? 'inline-block' : 'block',
+                'margin-inline-end': '10px'
+              }"
+              class="form-check"
+              *ngFor="let option of field.options; let i = index"
+            >
+              <input
+                class="form-check-input"
+                type="radio"
+                [id]="'radio ' + option.label + ' ' + i"
+                [value]="option.value"
+                [formControlName]="field.name"
+                checked
+              />
+              <label
+                class="form-check-label"
+                [for]="'radio ' + option.label + ' ' + i"
+              >
+                {{ option.label }}
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="field.type === 'checkbox'">
+            <div
+              [ngStyle]="{
+                display: field.inline ? 'inline-block' : 'block',
+                'margin-inline-end': '10px'
+              }"
+              *ngFor="let option of field.options; let i = index"
+              class="form-check"
+            >
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [id]="'checkbox ' + option.label + ' ' + i"
+                [checked]="option.selected"
+                (click)="
+                  addOrRemoveOptionToCheckboxGroup(
+                    $event,
+                    field.name,
+                    option.value
+                  )
+                "
+              />
+              <label
+                class="form-check-label"
+                [for]="'checkbox ' + option.label + ' ' + i"
+              >
+                {{ option.label }}
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="field.type === 'select'">
+            <select
+              class="form-control"
+              [id]="field.name"
+              [multiple]="field.multiple"
+              [formControlName]="field.name"
+              (change)="filterNullValue(field)"
+            >
+              <option disabled selected [value]="null">
+                -- select an option --
+              </option>
+              <option
+                *ngFor="let option of field.options"
+                [value]="option.value"
+              >
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+
+          <div
+            class="validation-error-message"
+            *ngIf="createdForm.get(field.name).errors"
+          >
+            <ng-container *ngFor="let validation of field.validations">
+              <div
+                *ngIf="
+                  validation.type === 'required' &&
+                  (createdForm.get(field.name).errors.required ||
+                    createdForm.get(field.name).errors.selectRequired)
+                "
+              >
+                {{ validation.message }}
+              </div>
+              <div
+                *ngIf="
+                  validation.type === 'minlength' &&
+                  createdForm.get(field.name).errors.minlength
+                "
+              >
+                {{ validation.message }}
+              </div>
+              <div
+                *ngIf="
+                  validation.type === 'maxlength' &&
+                  createdForm.get(field.name).errors.maxlength
+                "
+              >
+                {{ validation.message }}
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <ng-container *ngFor="let action of formObject.actions">
+          <button
+            *ngIf="action.type === 'cancel'"
+            class="btn btn-secondary cancel-btn"
+            (click)="cancelHandler()"
+          >
+            {{ action.text }}
+          </button>
+
+          <button
+            *ngIf="action.type === 'submit'"
+            class="btn btn-primary submit-btn"
+            (click)="submitHandler()"
+            [disabled]="createdForm.invalid"
+          >
+            {{ action.text }}
+          </button>
+        </ng-container>
+      </div>
+    </form>
+  </div>
+</div>
