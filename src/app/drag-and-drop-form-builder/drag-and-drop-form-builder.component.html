@@ -45,14 +45,6 @@
           </div>
         </div>
       </div>
-
-      <button
-        class="btn btn-primary"
-        [disabled]="!selectedFields.length && !selectedActions.length"
-        (click)="renderForm()"
-      >
-        Render Form
-      </button>
     </div>
 
     <div class="drag-and-drop-container selected-controls">
@@ -553,7 +545,15 @@
   </div>
 
   <div class="form-render-section">
-    <h5>Created Form will be rendered below</h5>
+    <div class="render-btn-row">
+      <button
+        class="btn btn-primary"
+        [disabled]="!selectedFields.length && !selectedActions.length"
+        (click)="renderForm()"
+      >
+        Render Form / update form
+      </button>
+    </div>
     <form class="created-form" [formGroup]="createdForm" *ngIf="showForm">
       <div class="fields">
         <div class="field" *ngFor="let field of formObject.fields">
@@ -591,15 +591,12 @@
               <input
                 class="form-check-input"
                 type="radio"
-                [id]="'radio ' + option.label + ' ' + i"
+                [id]="field.name + i"
                 [value]="option.value"
                 [formControlName]="field.name"
                 checked
               />
-              <label
-                class="form-check-label"
-                [for]="'radio ' + option.label + ' ' + i"
-              >
+              <label class="form-check-label" [for]="field.name + i">
                 {{ option.label }}
               </label>
             </div>
@@ -617,7 +614,7 @@
               <input
                 class="form-check-input"
                 type="checkbox"
-                [id]="'checkbox ' + option.label + ' ' + i"
+                [id]="field.name + i"
                 [checked]="option.selected"
                 (click)="
                   addOrRemoveOptionToCheckboxGroup(
@@ -627,10 +624,7 @@
                   )
                 "
               />
-              <label
-                class="form-check-label"
-                [for]="'checkbox ' + option.label + ' ' + i"
-              >
+              <label class="form-check-label" [for]="field.name + i">
                 {{ option.label }}
               </label>
             </div>
