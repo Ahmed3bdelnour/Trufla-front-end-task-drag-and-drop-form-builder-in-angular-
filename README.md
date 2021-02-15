@@ -6,6 +6,10 @@
 
 # user can edit default values for controls and validations
 
+# user should give a unique name for each control
+
 # after that user can render the created form using created validations
 
-# finally user can submit the form with entered values 
+# user can update created form and rerender it
+
+# finally, user can submit the form with entered values 
