@@ -24,6 +24,10 @@ import { IDynamicForm } from '../models/form.model';
   styleUrls: ['./drag-and-drop-form-builder.component.scss'],
 })
 export class DragAndDropFormBuilderComponent implements OnInit {
+  /**
+   * kindly take a look on README.md file on the github repository for project details.
+   */
+
   /** Form group object which will be created and rendered (Using Reactive forms approach). */
   createdForm: FormGroup;
   /** Js object represents the form and will be used to create it. */
