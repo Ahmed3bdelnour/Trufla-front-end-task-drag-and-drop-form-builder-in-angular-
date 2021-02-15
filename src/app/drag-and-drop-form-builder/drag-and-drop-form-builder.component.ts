@@ -234,6 +234,13 @@ export class DragAndDropFormBuilderComponent implements OnInit {
   /** Remove field from selected fields. */
   removeSelectedField(index: number) {
     this.selectedFields.splice(index, 1);
+    this.hideRenderedForm();
+  }
+
+  hideRenderedForm() {
+    if (!this.selectedFields.length && !this.selectedActions.length) {
+      this.showForm = false;
+    }
   }
 
   /** Open or close a form to edit field. */
@@ -244,6 +251,7 @@ export class DragAndDropFormBuilderComponent implements OnInit {
   /** Remove action from selected actions. */
   removeSelectedAction(index: number) {
     this.selectedActions.splice(index, 1);
+    this.hideRenderedForm();
   }
 
   /** Add or remove option to a checkbox group. */
