@@ -259,6 +259,8 @@ export class DragAndDropFormBuilderComponent implements OnInit {
       );
       checkboxFormArray.removeAt(indexToRemove);
     }
+
+    checkboxFormArray.markAsTouched();
   }
 
   /** Remove option from field options. */

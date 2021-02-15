@@ -347,7 +347,7 @@
                       [id]="'value ' + fieldIndex"
                       [(ngModel)]="selectedField.value"
                     >
-                      <option [value]="null" disabled>Select value</option>
+                      <option value="" disabled>-- Select value --</option>
                       <option
                         *ngFor="let option of selectedField.options"
                         [value]="option.value"
@@ -572,7 +572,10 @@
             <input
               type="text"
               class="form-control"
-              [class.invalid-control]="createdForm.get(field.name).errors"
+              [class.invalid-control]="
+                createdForm.get(field.name).errors &&
+                createdForm.get(field.name).touched
+              "
               [id]="field.name"
               [placeholder]="field.placeholder"
               [formControlName]="field.name"
@@ -633,13 +636,18 @@
           <div class="form-group" *ngIf="field.type === 'select'">
             <select
               class="form-control"
+              [class.invalid-control]="
+                createdForm.get(field.name).errors &&
+                createdForm.get(field.name).touched
+              "
               [id]="field.name"
               [multiple]="field.multiple"
               [formControlName]="field.name"
               (change)="filterNullValue(field)"
             >
               <option disabled selected [value]="null">
-                -- {{ field.placeholder }} --
+                --
+                {{ field.placeholder ? field.placeholder : "Select option" }} --
               </option>
               <option
                 *ngFor="let option of field.options"
@@ -652,7 +660,10 @@
 
           <div
             class="validation-error-message"
-            *ngIf="createdForm.get(field.name).errors"
+            *ngIf="
+              createdForm.get(field.name).errors &&
+              createdForm.get(field.name).touched
+            "
           >
             <ng-container *ngFor="let validation of field.validations">
               <div
