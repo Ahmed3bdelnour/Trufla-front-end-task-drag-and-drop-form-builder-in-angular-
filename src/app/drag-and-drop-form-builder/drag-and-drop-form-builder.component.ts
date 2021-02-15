@@ -237,6 +237,7 @@ export class DragAndDropFormBuilderComponent implements OnInit {
     this.hideRenderedForm();
   }
 
+  /** Hide rendered form if there is no controls selected. */
   hideRenderedForm() {
     if (!this.selectedFields.length && !this.selectedActions.length) {
       this.showForm = false;
