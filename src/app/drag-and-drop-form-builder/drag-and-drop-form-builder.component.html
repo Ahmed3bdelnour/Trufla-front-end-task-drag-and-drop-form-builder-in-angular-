@@ -639,7 +639,7 @@
               (change)="filterNullValue(field)"
             >
               <option disabled selected [value]="null">
-                -- select an option --
+                -- {{ field.placeholder }} --
               </option>
               <option
                 *ngFor="let option of field.options"
