@@ -16,4 +16,4 @@
 
 # - finally, user can submit the form with entered values if the form is valid
 
-# - validations are enabled by default for demo purposes
+# - validations are enabled by default
