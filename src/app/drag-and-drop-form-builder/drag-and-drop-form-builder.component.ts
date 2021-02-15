@@ -317,7 +317,7 @@ export class DragAndDropFormBuilderComponent implements OnInit {
   }
 
   /** Disable options except optionIndex. */
-  disableOptions(field, optionIndex) {
+  disableOptions(field: IField, optionIndex: number) {
     field.options.forEach((option, i) => {
       if (i !== optionIndex) {
         option.disabled = true;
@@ -340,14 +340,14 @@ export class DragAndDropFormBuilderComponent implements OnInit {
   }
 
   /** Remove default null value when select value changes. */
-  filterNullValue(field) {
+  filterNullValue(field: IField) {
     const control = this.createdForm.get(field.name);
     const filteredValue = control.value.filter((value) => value !== null);
     control.setValue(filteredValue);
   }
 
   /** Should remove the option or not. */
-  showRemoveIcon(field, index) {
+  showRemoveIcon(field: IField, index: number) {
     let show: boolean = false;
 
     if (
