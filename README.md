@@ -6,7 +6,7 @@
 
 # user can select required fields and buttons from available fields and available actions
 
-# user can edit default values for fields, actions and validations
+# user can edit default values for selected fields, actions and validations
 
 # user should give a unique name for each control
 
