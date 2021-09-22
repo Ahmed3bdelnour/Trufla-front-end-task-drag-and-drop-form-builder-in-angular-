@@ -1,4 +1,3 @@
-# - TruflaFrontEndTask
 
 # - this project creates dynamic form with drag and drop functionality using angular, angular cdk and bootstrap 4
 
