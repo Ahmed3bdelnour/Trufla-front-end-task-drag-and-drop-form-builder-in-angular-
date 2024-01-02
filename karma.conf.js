@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/Trufla-Front-end-Task'),
+      dir: require('path').join(__dirname, './coverage/drag-and-drop-form-builder'),
       subdir: '.',
       reporters: [
         { type: 'html' },
